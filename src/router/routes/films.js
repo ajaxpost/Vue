@@ -6,8 +6,8 @@ import Nowplaying from '@/views/Films/Nowplaying';
 let Films_Routes = {
     path:'/films',component:Films,
     children:[
-        {path:'nowPlaying',component:Nowplaying},
-        {path:'comingSoon',component:ComingSoon},
+        {path:'nowPlaying',name:'rebo',component:Nowplaying},
+        {path:'comingSoon',name:'shangying',component:ComingSoon},
     ],
     redirect:'/films/nowPlaying'
 }

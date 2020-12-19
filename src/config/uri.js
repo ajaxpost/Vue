@@ -1,4 +1,4 @@
-let api = '/api/'
+let api = '/api'
 
 export default {
     'getCitiesInfo': api + 'getCitiesInfo',
