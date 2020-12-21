@@ -15,8 +15,9 @@ import cinemas from './routes/cinemas'
 
 const routes = [
   center,
-  films,
+  ...films,
   cinemas,
+  {path:'/tab1',component:()=>import('@/test/tab1')},
   {path:'/',redirect:'/films'},
   
 ]

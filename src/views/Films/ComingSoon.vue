@@ -1,33 +1,34 @@
 <template>
-  <div id="content">
-    <Loading :isLoading="isLoading"></Loading>
+  <div class="wrapp" :style="{height:height+'px'}">
+    <div id="content">
+      <Loading :isLoading="isLoading"></Loading>
 
-    <van-card v-for="(val) in list" :key="val.filmId">
-      <template #thumb>
-        <img class="price" :src="val.poster" />
-      </template>
-      <template #title>
-        <div style="fontSize:16px;color:#191a1b;margin-right: 5px;margin-top:7px">
-          {{val.name}}
-          <span class="item">{{val.item.name}}</span>
-        </div>
-      </template>
-      <template #desc>
-        <div style="width:240px;height:17px" v-if="!val.grade"></div>
-        <div v-show="val.grade">
-          <span style="font-size: 13px;margin-top: 4px;color: #797d82;">观众评分:</span>
-          <span style="color: #ffb232;font-size: 14px;">{{val.grade}}</span>
-        </div>
-        <div style="margin-top:5px;">
-          <span class="slh">主演: {{val.actors | fun}}</span>
-          <div class="comingSoonFilm-buy" style="float: right;">预购</div>
-        </div>
-        <div>{{val.nation}} | {{val.runtime}}分钟</div>
-      </template>
-      <!--
-      -->
-    
-    </van-card>
+      <van-card v-for="(val) in list" :key="val.filmId" @click="deF(val.filmId)">
+        <template #thumb>
+          <img class="price" :src="val.poster" />
+        </template>
+        <template #title>
+          <div style="fontSize:16px;color:#191a1b;margin-right: 5px;margin-top:7px">
+            {{val.name}}
+            <span class="item">{{val.item.name}}</span>
+          </div>
+        </template>
+        <template #desc>
+          <div style="width:240px;height:17px" v-if="!val.grade"></div>
+          <div v-show="val.grade">
+            <span style="font-size: 13px;margin-top: 4px;color: #797d82;">观众评分:</span>
+            <span style="color: #ffb232;font-size: 14px;">{{val.grade}}</span>
+          </div>
+          <div style="margin-top:5px;">
+            <span class="slh">主演: {{val.actors | fun}}</span>
+            <div class="comingSoonFilm-buy" style="float: right;">预购</div>
+          </div>
+          <div>{{val.nation}} | {{val.runtime}}分钟</div>
+        </template>
+        <!--
+        -->
+      </van-card>
+    </div>
   </div>
 </template>
 
@@ -36,6 +37,8 @@ import url from "@/config/uri";
 import Loading from "@/components/Loading";
 import Vue from "vue";
 import { Card, Sticky } from "vant";
+
+import Bscroll from "better-scroll";
 Vue.use(Card);
 Vue.use(Sticky);
 
@@ -44,32 +47,60 @@ export default {
     return {
       list: [],
       isLoading: true,
-      pageNum:1
+      pageNum: 1,
+      bs: null,
+      height: 0,
+      startY: 0,
+      total: 1
     };
   },
-    created() {
-        this.getList()
-    },
+  created() {
+    this.getList();
+  },
   mounted() {
     //滚动
-      // window.addEventListener('scroll',()=>{
-      //     let top = document.documentElement.scrollTop;
-      //       let height = document.documentElement.clientHeight;
-      //       if( top + height +10 > document.documentElement.offsetHeight ){
-      //           // this.getList()
-      //       }  
-      // })
+    // window.addEventListener('scroll',()=>{
+    //     let top = document.documentElement.scrollTop;
+    //       let height = document.documentElement.clientHeight;
+    //       if( top + height +100 > document.documentElement.offsetHeight ){
+    //           this.getList()
+    //       }
+    //       // console.log(top+height+100,document.documentElement.offsetHeight );
+    // })
+
+    this.height = document.documentElement.clientHeight - 100;
+  },
+  updated() {
+    this.bs = new Bscroll(".wrapp", {
+      click: true,
+      startY: this.startY,
+      pullUpLoad: true,
+    });
+    this.bs.on("pullingUp", () => {
+      if(this.startY == this.bs.y) return
+      this.getList();
+      this.startY = this.bs.y;
+      this.bs.finishPullUp();
+    });
   },
   methods: {
     async getList() {
-      let data = await this.$http.get(url.getComingSoonFilmList + `?pageNum=${this.pageNum}&pageSize=11`);
-      this.list = [...this.list,...data.data.films]
-      if( Math.ceil(data.data.total/10) > this.pageNum ){
-        this.pageNum++;
+      if (this.pageNum <= this.total) {
+        let data = await this.$http.get(
+          url.getComingSoonFilmList + `?pageNum=${this.pageNum}`
+        );
+        this.total = Math.ceil(data.data.total/10);
+        if (Math.ceil(data.data.total / 10) >= this.pageNum) {
+          this.pageNum++;
+          this.list = [...this.list, ...data.data.films];
+        }
+        if (this.list.length !== 0) {
+          this.isLoading = false;
+        }
       }
-      if (this.list.length !== 0) {
-        this.isLoading = false;
-      }
+    },
+    deF: function(id) {
+      this.$router.push("/film/" + id);
     }
   },
   components: {
@@ -120,15 +151,15 @@ export default {
   border-radius: 2px;
 }
 .comingSoonFilm-buy {
-    float: right;
-    line-height: 25px;
-    height: 25px;
-    width: 50px;
-    color: #ffb232;
-    font-size: 13px;
-    text-align: center;
-    border-radius: 2px;
-    position: relative;
-    border:1px solid;
+  float: right;
+  line-height: 25px;
+  height: 25px;
+  width: 50px;
+  color: #ffb232;
+  font-size: 13px;
+  text-align: center;
+  border-radius: 2px;
+  position: relative;
+  border: 1px solid;
 }
 </style>

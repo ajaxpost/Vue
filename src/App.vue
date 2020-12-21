@@ -1,23 +1,24 @@
 <template>
   <div id="app">
     <router-view/>
-    <Footer/>
+    <Footer v-show="$store.state.bool"/>
   </div>
 </template>
 
 <script>
-import url from '@/config/uri'
+
+
 import Footer from '@/components/Footer'
 export default {
-    created(){
-      // this.$http.get(url.getComingSoonFilmList).then(ret=>{console.log(ret)})
-    
-      
+    data:function(){
+      return {
+        
+      }
     },
     components:{
       Footer,
-
-    }
+    },
+   
 }
 </script>
 

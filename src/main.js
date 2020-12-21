@@ -6,7 +6,7 @@ import axios from '@/api/http';
 
 Vue.prototype.$http = axios;
 Vue.config.productionTip = false
-
+Vue.prototype.$eventBus = new Vue();
 new Vue({
   router,
   store,

@@ -8,7 +8,7 @@
 export default {
     props:['buy'],
     created(){
-        console.log(this.buy);
+        // console.log(this.buy);
         
     }
 }

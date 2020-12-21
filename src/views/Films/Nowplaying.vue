@@ -45,9 +45,10 @@ export default {
     return {
       list: [],
       isLoading: true,
-      isLoading2: true,
+      isLoading2: false,    // 起始的值是什么无所谓
       pageNum: 1,
-      tmp:[]
+      tmp: [],
+      total:1,
     };
   },
   created() {
@@ -70,7 +71,7 @@ export default {
   },
   methods: {
     deF: function(id) {
-      // this.$router.push("/films/" + id);
+      this.$router.push("/film/" + id);
     },
     onRefresh: function() {
       this.getList(() => {
@@ -78,24 +79,26 @@ export default {
       });
     },
     getList: function(cb = null) {
+      if( this.pageNum <= this.total ){
       this.$http
         .get(url.getNowPlayingFilmList + `?pageNum=${this.pageNum}`)
         .then(ret => {
-          if( this.pageNum < Math.ceil(ret.data.total / 10) ){
-              this.pageNum++;
-               
+          this.total = Math.ceil(ret.data.total/10);
+          if (this.pageNum <= Math.ceil(ret.data.total / 10)) {
+            this.pageNum++;
+            this.list = ret.data.films.concat(this.list);
           }
-          this.list = ret.data.films.concat(this.list);
-
-           if( this.list.length !== 0){
-           this.isLoading = false;
-        }
+          if (cb) {
+            cb();
+          }else{
+             this.isLoading = false;
+          }
         });
-      if( cb ){
-         cb()
+      }else{
+        cb()
       }
     }
-  },
+  }
 };
 </script>
 
