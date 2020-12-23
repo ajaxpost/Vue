@@ -29,7 +29,11 @@ export default {
      },
      created(){
        this.active = this.url.indexOf(this.$route.path) === -1 ? 0 : this.url.indexOf(this.$route.path)
-         
+     },
+     watch:{
+         $route:function(newVal){
+             this.active = this.url.indexOf(newVal.path) === -1 ? 0 : this.url.indexOf(newVal.path)
+         }
      }
 }
 </script>

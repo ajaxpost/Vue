@@ -10,7 +10,10 @@ export default new Vuex.Store({
     username:'hdk',
     age:18,
     bool:true,
-    number:1
+    num:1,
+    cityId:'',
+    cityName:'',
+    token:''
   },
   //修改数据源的方法(同步)
   mutations: {
@@ -24,6 +27,18 @@ export default new Vuex.Store({
     // test:function(a){
     //   console.log(a);
     // }
+    num:function(state,val){
+      state.num = val
+    },
+    setCity:function(state,cityid_name){
+      state.cityId = cityid_name.id
+      state.cityName = cityid_name.name
+    },
+    setToken:function(state,val){
+      state.token = val
+      window.localStorage.setItem('token',state.token)
+    }
+
   },
   //修改数据源的方法(异步)
   actions: {
@@ -37,7 +52,6 @@ export default new Vuex.Store({
   getters:{
     fun2:function(a){
       return '我我我我'
-      
     }
   },
   //模块化拆

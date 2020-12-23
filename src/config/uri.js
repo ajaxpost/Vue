@@ -4,4 +4,6 @@ export default {
     'getCitiesInfo': api + 'getCitiesInfo',
     'getNowPlayingFilmList': api + 'getNowPlayingFilmList',
     'getComingSoonFilmList': api +'getComingSoonFilmList',
+    'getFilmInfo': api + 'getFilmInfo',
+    
 }

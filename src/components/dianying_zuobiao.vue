@@ -1,5 +1,5 @@
 <template>
-    <div v-show="buy" class="zuobiao">
+    <div class="zuobiao" @click="fun">
         电影
     </div>
 </template>
@@ -10,6 +10,11 @@ export default {
     created(){
         // console.log(this.buy);
         
+    },
+    methods:{
+        fun:function(){
+            this.$router.push('/city')
+        }
     }
 }
 </script>

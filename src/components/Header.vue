@@ -1,6 +1,6 @@
 <template>
   <div style="height:50px">
-    <!-- <zuobiao :buy="buy"></zuobiao> -->
+    <zuobiao v-show="buy"></zuobiao>
     <van-tabs @click="onClick" :class="{one:bool}" v-model="num">
       <van-tab title="正在热播"></van-tab>
       <van-tab title="即将上映"></van-tab>
@@ -21,17 +21,19 @@ export default {
       url: ["rebo", "shangying"],
       bool: true,
       num: 0,
-      buy: false
+      buy: false,
+     
     };
   },
   methods: {
     onClick(name, title) {
       Toast(title);
       this.$router.push({ name: this.url[name] });
+
     }
   },
-  created() {
-    this.num = this.url.indexOf(this.$route.name);
+  created(){
+    this.num = this.url.indexOf(this.$route.name)
   },
   mounted() {
     
@@ -49,6 +51,12 @@ export default {
   },
   components: {
     zuobiao
+  },
+  watch:{
+    $route:function(newVal){
+        this.num = this.url.indexOf(newVal.name)
+        // console.log(newVal)
+    }
   }
 };
 </script>
